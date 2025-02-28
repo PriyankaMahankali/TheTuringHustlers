@@ -1,19 +1,18 @@
-import os
-import google.generativeai as genai
-from dotenv import load_dotenv
+from gpt4all import GPT4All
 
-# Load API Key from environment
-load_dotenv()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# Load the GPT4All model
+MODEL_PATH = "C:/Users/priya/OneDrive/Documents/GenAIHackathon/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+model = GPT4All(MODEL_PATH, allow_download=False)
 
-# Configure Gemini API
-genai.configure(api_key=GEMINI_API_KEY)
-
-def generate_cover_letter(user_prompt):
+def generate_cover_letter(name, job_title, skills, writing_style):
     """
-    Calls Gemini API to generate a cover letter based on the user's custom prompt.
+    Uses GPT4All to generate a cover letter based on structured user inputs.
     """
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content(user_prompt)
+    user_prompt = (
+        f"Write a {writing_style.lower()} cover letter for {name} applying for the position of {job_title}. "
+        f"Highlight the following skills: {skills}."
+    )
     
-    return response.text if response else "Error generating cover letter."
+    response = model.generate(user_prompt)
+    return response if response else "Error generating cover letter."
+
